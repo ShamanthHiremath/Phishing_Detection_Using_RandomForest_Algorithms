@@ -16,6 +16,8 @@ import whois
 import datetime
 import ipaddress
 
+# Feature 1
+# URL having IP address
 def url_having_ip(url):
     try:
         ipaddress.ip_address(url)
@@ -23,7 +25,8 @@ def url_having_ip(url):
     except:
         return(1)
 
-
+# Feature 2
+# URL length
 def url_length(url):
     length=len(url)
     if(length<54):
@@ -33,7 +36,8 @@ def url_length(url):
     else:
         return 1
 
-
+# Feature 3
+#  URL shortening service
 def url_short(url):
    match=regex.search('bit\.ly|goo\.gl|shorte\.st|go2l\.ink|x\.co|ow\.ly|t\.co|tinyurl|tr\.im|is\.gd|cli\.gs|'
                     'yfrog\.com|migre\.me|ff\.im|tiny\.cc|url4\.eu|twit\.ac|su\.pr|twurl\.nl|snipurl\.com|'
@@ -47,6 +51,7 @@ def url_short(url):
    else:
     return(1)
 
+# Feature 4
 def having_at_symbol(url):
     symbol=regex.findall(r'@',url)
     if(len(symbol)==0):
@@ -54,6 +59,7 @@ def having_at_symbol(url):
     else:
         return 1
 
+# Feature 5
 def doubleSlash(url):
   list=[x.start(0) for x in regex.finditer('//', url)]
   if list[len(list)-1]>6:
@@ -61,6 +67,7 @@ def doubleSlash(url):
   else:
         return(1)
 
+# Feature 6
 def prefix_suffix(url):
     subDomain, domain, suffix = extract(url)
     if(domain.count('-')):
@@ -68,6 +75,7 @@ def prefix_suffix(url):
     else:
         return -1
 
+# Feature 7
 def sub_domain(url):
     subDomain, domain, suffix = extract(url)
     if(subDomain.count('.')==0):
@@ -77,6 +85,7 @@ def sub_domain(url):
     else:
         return 1
 
+# Feature 8
 def SSLfinal_State(url):
     try:
 #check wheather contains https
@@ -119,6 +128,7 @@ def SSLfinal_State(url):
 
         return 1
 
+# Feature 9
 def domain_registration(url):
     try:
         w = whois.whois(url)
@@ -132,10 +142,12 @@ def domain_registration(url):
     except:
         return 0
 
+# Feature 10
 def favicon(url):
     #ongoing
     return 0
 
+# Feature 11
 def port(url):
     domain = regex.findall(r"://([^/]+)/?", url)[0]
     if regex.match(r"^www.",domain):
@@ -149,6 +161,7 @@ def port(url):
     except:
           return(1)
 
+# Feature 12
 def https_token(url):
     subDomain, domain, suffix = extract(url)
     host =subDomain +'.' + domain + '.' + suffix
@@ -157,6 +170,7 @@ def https_token(url):
     else:
         return -1
 
+# Feature 13
 def request_url(url):
     try:
         subDomain, domain, suffix = extract(url)
@@ -195,7 +209,7 @@ def request_url(url):
     except:
         return 0
 
-
+# Feature 14
 def url_of_anchor(url):
     try:
         subDomain, domain, suffix = extract(url)
@@ -224,7 +238,8 @@ def url_of_anchor(url):
             return 1
     except:
         return 0
-
+    
+# Feature 15
 def Links_in_tags(url):
     try:
         opener = urllib.request.urlopen(url).read()
@@ -257,10 +272,12 @@ def Links_in_tags(url):
     except:
         return 0
 
+# Feature 16
 def sfh(url):
     #ongoing
     return 0
 
+# Feature 17
 def email_submit(url):
     try:
         opener = urllib.request.urlopen(url).read()
@@ -272,30 +289,37 @@ def email_submit(url):
     except:
         return 0
 
+# Feature 18
 def abnormal_url(url):
     #ongoing
     return 0
 
+# Feature 19
 def redirect(url):
     #ongoing
     return 0
 
+# Feature 20
 def on_mouseover(url):
     #ongoing
     return 0
 
+# Feature 21
 def rightClick(url):
     #ongoing
     return 0
 
+# Feature 22
 def popup(url):
     #ongoing
     return 0
 
+# Feature 23
 def iframe(url):
     #ongoing
     return 0
 
+# Feature 24
 def age_of_domain(url):
     try:
         w = whois.whois(url)
@@ -310,39 +334,43 @@ def age_of_domain(url):
         #print(e)
         return 0
 
+# Feature 25
 def dns(url):
     #ongoing
     return 0
 
+# Feature 26
 def web_traffic(url):
     #ongoing
     return 0
 
+# Feature 27
 def page_rank(url):
     #ongoing
     return 0
 
+# Feature 28
 def google_index(url):
     #ongoing
     return 0
 
-
+# Feature 29
 def links_pointing(url):
     #ongoing
     return 0
-
+# Feature 30
 def statistical(url):
     #ongoing
     return 0
 
-def main(url):
-
+# Takes URL as input and returns the features as a list
+def extract_url_features(url):
     # Converts the given URL into standard format
     if not regex.match(r"^https?", url):
         url = "http://" + url
 
 
-    check = [[url_having_ip(url),url_length(url),url_short(url),having_at_symbol(url),
+    url_features = [[url_having_ip(url),url_length(url),url_short(url),having_at_symbol(url),
              doubleSlash(url),prefix_suffix(url),sub_domain(url),SSLfinal_State(url),
               domain_registration(url),favicon(url),port(url),https_token(url),request_url(url),
               url_of_anchor(url),Links_in_tags(url),sfh(url),email_submit(url),abnormal_url(url),
@@ -351,5 +379,5 @@ def main(url):
               links_pointing(url),statistical(url)]]
 
 
-    #print(check)
-    return check
+    print(url_features)
+    return url_features
