@@ -46,6 +46,11 @@ classifier.fit(x_train, y_train)
 # Predicting the test set results
 y_pred = classifier.predict(x_test)
 
+# Cross-validation score
+from sklearn.model_selection import cross_val_score
+val_score = cross_val_score(classifier, x_train, y_train, cv=3, scoring='accuracy').mean()
+print(f"Cross-validation score: {val_score}")
+
 # Confusion matrix
 from sklearn.metrics import confusion_matrix, pair_confusion_matrix
 cm = confusion_matrix(y_test, y_pred)
@@ -74,3 +79,19 @@ plt.show()
 '''
 # Pickle file joblib
 joblib.dump(classifier, 'trained_models/randomForest_final.pkl', protocol=4)
+
+'''
+RANDOM FOREST MODEL SPECS:
+
+Accuracy of the model: 97.23789746464618  %
+Best Accuracy = 0.9723789746464618
+Best parameters = {'criterion': 'entropy', 'max_features': 'log2', 'n_estimators': 100}
+
+Cross-validation score: 0.9693641373263504
+
+Confusion Matrix:
+[       True  False
+    +ve [1186   63]
+    -ve [26   1489]
+]
+'''

@@ -42,10 +42,37 @@ model.fit(x_train, y_train)
 #predicting the tests set result
 y_pred = model.predict(x_test)
 
+# Cross-validation score
+from sklearn.model_selection import cross_val_score
+val_score = cross_val_score(model, x_train, y_train, cv=3, scoring='accuracy').mean()
+print(f"Cross-validation score: {val_score}")
+
 #confusion matrix
-from sklearn.metrics import confusion_matrix
+from sklearn.metrics import confusion_matrix, pair_confusion_matrix
 cm = confusion_matrix(y_test, y_pred)
 print(cm)
 
+'''
+# Visualizing the confusion matrix
+from sklearn.metrics import pair_confusion_matrix 
+pair_confusion_matrix(ensemble, x_test, y_test, display_labels=['Class 0', 'Class 1'], cmap=plt.cm.Blues, values_format='d')
+plt.show()
+
+'''
+
 #pickle file joblib
 joblib.dump(model, 'trained_models/svm_final.pkl')
+
+'''
+ENSEMBLED VOTING MACHINE MODEL SPECS:
+
+Accuracy of the model: 95.80318379160637 %
+Best Accurancy =0.964660211399458
+Best parameters ={'C': 1000, 'gamma': 0.2}
+Cross-validation score: 0.9587500146219275
+Confusion Matrix:
+[       True  False
+    +ve [1185   64]
+    -ve [26   1489]
+]
+'''

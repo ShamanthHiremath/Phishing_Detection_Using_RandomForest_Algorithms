@@ -30,6 +30,10 @@ from sklearn.metrics import accuracy_score
 accuracy = accuracy_score(y_test, y_pred)
 print(f"Accuracy of the model: {accuracy * 100} %")
 
+from sklearn.model_selection import cross_val_score
+val_score = cross_val_score(model, x_train, y_train, cv=3, scoring='accuracy').mean()
+print(f"Cross-validation score: {val_score}")
+
 #confusion matrix
 from sklearn.metrics import confusion_matrix, pair_confusion_matrix
 cm = confusion_matrix(y_test, y_pred)
@@ -44,3 +48,15 @@ plt.show()
 '''
 #pickle file joblib
 joblib.dump(model, 'trained_models/logisticR_final.pkl')
+
+'''
+LOGISTIC REGRESION MODEL SPECS:
+
+Accuracy of the model: 92.32995658465991 %
+Cross-validation score: 0.9296824955361656
+Confusion Matrix:
+[       True  False
+    +ve [1121  128] 
+    -ve [84   1431]
+]
+'''
