@@ -1,0 +1,40 @@
+Domain,Have_IP,Have_At,URL_Length,URL_Depth,Redirection,https_Domain,TinyURL,Prefix/Suffix,DNS_Record,Web_Traffic,Domain_Age,Domain_End,iFrame,Mouse_Over,Right_Click,Web_Forwards,Label
+
+id,having_IP_Address,URL_Length,Shortining_Service,having_At_Symbol,double_slash_redirecting,Prefix_Suffix,having_Sub_Domain,SSLfinal_State,Domain_registeration_length,Favicon,port,HTTPS_token,Request_URL,URL_of_Anchor,Links_in_tags,SFH,Submitting_to_email,Abnormal_URL,Redirect,on_mouseover,RightClick,popUpWidnow,Iframe,age_of_domain,DNSRecord,web_traffic,Page_Rank,Google_Index,Links_pointing_to_page,Statistical_report,Result
+
+
+Here is the complete list of features extracted from the code:
+
+1. IP Address in URL (having_IP_Address)
+2. Length of URL (URL_Length)
+3. Using URL Shortening Services (Shortining_Service)
+4. "@" Symbol in URL (having_At_Symbol)
+5. "//" in URL (double_slash_redirecting)
+6. Prefix or Suffix "-" in Domain (Prefix_Suffix)
+7. Subdomain (having_Sub_Domain)
+8. SSLfinal_State
+9. Domain Registration Length (Domain_registeration_length)
+10. Favicon
+11. Port
+12. HTTPS token
+13. Request URL
+14. URL of Anchor
+15. Links in tags
+16. SFH (Server Form Handler)
+17. Submitting to Email
+18. Abnormal URL
+19. Redirection "//" in URL (Redirect)
+20. On Mouseover (on_mouseover)
+21. Right Click (RightClick)
+22. IFrame (Iframe)
+23. Age of Domain (age_of_domain)
+24. DNS Record (DNSRecord)
+25. Web Traffic (web_traffic)
+26. Page Rank
+27. Google Index
+28. Number of Links Pointing to Page (Links_pointing_to_page)
+29. Statistical Report (Statistical_report)
+30. Label (Result)
+31. Domain (Domain)
+32. Web Forwards (Web_Forwards)
+33. popUpWidnow (Pop Up Window, assumed typo or variant)
