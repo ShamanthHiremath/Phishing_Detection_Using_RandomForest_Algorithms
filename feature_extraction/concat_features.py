@@ -18,6 +18,7 @@ import requests
 from bs4 import BeautifulSoup
 from urllib.parse import urlparse, urljoin
 import urllib.request
+import urllib.error
 import whois
 import datetime
 import ipaddress
@@ -125,6 +126,15 @@ If the URL has '-' symbol in the domain part of the URL, the value assigned to t
 
 '''
 
+def extract(url):
+    # Assuming url is in the format: subdomain.domain.suffix
+    parts = url.split('.')
+    sub_domain = parts[:-2]  # Extract subdomain
+    domain = parts[-2]        # Extract domain
+    suffix = parts[-1]        # Extract suffix
+    return sub_domain, domain, suffix
+
+
 def prefix_suffix(url):
     subDomain, domain, suffix = extract(url)
     if(domain.count('-')):
@@ -225,8 +235,8 @@ def port(url):
 # Feature 12
 def https_token(url):
     subDomain, domain, suffix = extract(url)
-    host =subDomain +'.' + domain + '.' + suffix
-    if(host.count('https')): #attacker can trick by putting https in domain part
+    host = '.'.join(subDomain + [domain] + [suffix])
+    if 'https' in host:  # Check if 'https' is present in the host
         return 1
     else:
         return -1
@@ -559,7 +569,7 @@ If the DNS record is empty or not found then, the value assigned to this feature
 
 '''
 
-def dns(domain):
+def check_dns(domain):
     # List of common DNSBL services
     dnsbl_services = [
         "zen.spamhaus.org",
@@ -610,17 +620,21 @@ def web_traffic(url):
     #ongoing
    
     try:
-    #Filling the whitespaces in the URL if any
+        # Filling the whitespaces in the URL if any
         url = urllib.parse.quote(url)
         rank = BeautifulSoup(urllib.request.urlopen("http://data.alexa.com/data?cli=10&dat=s&url=" + url).read(), "xml").find(
             "REACH")['RANK']
         rank = int(rank)
-    except TypeError:
-        return 1
-    if rank <100000:
-        return 1
-    else:
-      return 0
+        if rank < 100000:
+            return 1
+        else:
+            return 0
+    except (urllib.error.URLError, urllib.error.HTTPError) as e:
+        print(f"Unable to fetch web traffic for URL: {url}. Error: {e}")
+        return -1
+    except Exception as e:
+        print(f"An unexpected error occurred: {e}")
+        return -1
 
 # Feature 27
 def page_rank(url):
@@ -705,13 +719,13 @@ def extract_url_features(url):
         url = "http://" + url
 
 
-    url_features = [[url_having_ip(url),url_length(url),url_short(url),having_at_symbol(url),
+    url_features = [url_having_ip(url),url_length(url),url_short(url),having_at_symbol(url),
              doubleSlash(url),prefix_suffix(url),sub_domain(url),SSLfinal_State(url),
               domain_registration(url),favicon(url),port(url),https_token(url),request_url(url),
               url_of_anchor(url),Links_in_tags(url),sfh(url),email_submit(url),abnormal_url(url),
               redirect(url),on_mouseover(url),rightClick(url),popup(url),iframe(url),
-              age_of_domain(url),dns(url),web_traffic(url),page_rank(url),google_index(url),
-              links_pointing(url),statistical(url)]]
+              age_of_domain(url),check_dns(url),web_traffic(url),page_rank(url),google_index(url),
+              links_pointing(url),statistical(url)]
 
 
     print(url_features)
