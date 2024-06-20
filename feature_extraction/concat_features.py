@@ -96,9 +96,9 @@ If the URL has '@' symbol, the value assigned to this feature is 1 (phishing) or
 def having_at_symbol(url):
     symbol=regex.findall(r'@',url)
     if(len(symbol)==0):
-        return -1
-    else:
         return 1
+    else:
+        return -1
 
 # Feature 5
 '''
@@ -343,40 +343,58 @@ def Links_in_tags(url):
     except:
         return 0
 
+
+
 # Feature 16
-def sfh(url):
-    # fetch HTML content of a URL
+def fetch_url(url):
     response = requests.get(url)
     response.raise_for_status() # Ensure we notice bad responses
-    html = response.text
-    
-    # Extract the form action URL and its domain
-    soup = BeautifulSoup(html, 'html.parser')
-    form = soup.find('form')
-    # Not phishy if no form is found in the HTML
-    if not form:
-        print("No form found in the HTML")
-        return -1
-    
-    action = form.get('action')
-    if not action:
-        print("No action attribute found in the form")
-        return -1
-    
-    # Join the action URL with the base URL if it's a relative URL
-    full_url = urljoin(url, action)
-    action_domain = urlparse(full_url).netloc
-    if action_domain:
-        url_domain = urlparse(url).netloc # Extract domain from the URL
-        # If the form data is submitted to the same domain, it's not phishy
-        if(url_domain == action_domain):
-            return -1
-        print(f"Form data is submitted to domain: {action_domain}")
-        x1 = url_having_ip(url) # -1 if IP address is present in URL, 1 otherwise
-        x2 = domain_registration(url) # -1 if domain is registered for more than a year, 1 otherwise
-        x3 = https_token(url) # -1 if https is not present in URL, 1 otherwise
-        x4 = SSLfinal_State(url) # -1 if certificate is valid and trusted, 1 otherwise
+    return response.text
+
+def sfh(url):
+    try:
+        # Fetch HTML content of the URL
+        html = fetch_url(url)
+
+        # Extract the form action URL and its domain
+        soup = BeautifulSoup(html, 'html.parser')
+        form = soup.find('form')
         
+        # Not phishy if no form is found in the HTML
+        if not form:
+            print("No form found in the HTML")
+            return -1
+        
+        action = form.get('action')
+        if not action:
+            print("No action attribute found in the form")
+            return -1
+        
+        # Join the action URL with the base URL if it's a relative URL
+        full_url = urljoin(url, action)
+        action_domain = urlparse(full_url).netloc
+        if action_domain:
+            url_domain = urlparse(url).netloc # Extract domain from the URL
+            # If the form data is submitted to the same domain, it's not phishy
+            if(url_domain == action_domain):
+                return -1
+            print(f"Form data is submitted to domain: {action_domain}")
+            x1 = url_having_ip(url) # -1 if IP address is present in URL, 1 otherwise
+            x2 = domain_registration(url) # -1 if domain is registered for more than a year, 1 otherwise
+            x3 = https_token(url) # -1 if https is not present in URL, 1 otherwise
+            x4 = SSLfinal_State(url) # -1 if certificate is valid and trusted, 1 otherwise
+            # Add more feature checks as needed
+            
+    except requests.exceptions.ConnectTimeout as e:
+        print("Connection timed out:", e)
+        # Handle the timeout error gracefully (e.g., retry or skip the URL)
+        return -1
+    except Exception as e:
+        print("An error occurred:", e)
+        # Handle other exceptions gracefully
+        return -1
+
+
 
 # Feature 17
 def email_submit(url):
@@ -731,7 +749,6 @@ def extract_url_features(url):
     print(url_features)
     return url_features
 
-print(extract_url_features("https://www.google.com"))
 
     
     
