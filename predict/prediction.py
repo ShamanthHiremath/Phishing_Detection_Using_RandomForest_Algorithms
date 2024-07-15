@@ -9,7 +9,7 @@ if parent_dir not in sys.path:
     sys.path.append(parent_dir)
 
 # Now you can import the module
-from feature_extraction.concat_features import *
+from feature_extraction.feature_extractor import *
 
 url = input("Enter the URL for prediction: ")
 
