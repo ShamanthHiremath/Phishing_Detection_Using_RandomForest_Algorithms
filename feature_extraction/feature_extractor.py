@@ -11,7 +11,7 @@ return 1 #phishing
 '''
 
 import regex
-from tldextract import extract
+import tldextract
 import ssl
 import socket
 import requests
@@ -36,6 +36,7 @@ If the domain part of URL has IP address, the value assigned to this feature is 
 def url_having_ip(url):
     try:
         ipaddress.ip_address(url)
+        print("I take long, I am checking for IP address in the URL")
         return(-1)
     except:
         return(1)
@@ -53,12 +54,13 @@ If the length of URL >= 54 , the value assigned to this feature is 1 (phishing) 
 
 def url_length(url):
     length=len(url)
+    print("I take long, I am checking for length of URL")
     if(length<54):
-        return -1
+        return 1
     elif(54<=length<=75):
         return 0
     else:
-        return 1
+        return -1
 
 # Feature 3
 '''
@@ -78,6 +80,7 @@ def url_short(url):
                        r'q\.gs|is\.gd|po\.st|bc\.vc|twitthis\.com|u\.to|j\.mp|buzurl\.com|cutt\.us|u\.bb|yourls\.org|'
                        r'x\.co|prettylinkpro\.com|scrnch\.me|filoops\.info|vzturl\.com|qr\.net|1url\.com|tweez\.me|v\.gd|tr\.im|link\.zip\.net')
     match = re.search(url)
+    print("I take long, I am checking for URL shortening services")
     if match:
        return -1
     else:
@@ -95,6 +98,7 @@ If the URL has '@' symbol, the value assigned to this feature is 1 (phishing) or
 
 def having_at_symbol(url):
     symbol=regex.findall(r'@',url)
+    print("I take long, I am checking for @ symbol in URL")
     if(len(symbol)==0):
         return 1
     else:
@@ -125,46 +129,44 @@ Checking the presence of '-' in the domain part of URL. The dash symbol is rarel
 If the URL has '-' symbol in the domain part of the URL, the value assigned to this feature is 1 (phishing) or else 0 (legitimate).
 
 '''
-
 def extract(url):
-    # Assuming url is in the format: subdomain.domain.suffix
-    parts = url.split('.')
-    sub_domain = parts[:-2]  # Extract subdomain
-    domain = parts[-2]        # Extract domain
-    suffix = parts[-1]        # Extract suffix
-    return sub_domain, domain, suffix
-
+    try:
+        ext = tldextract.extract(url)
+        return ext.subdomain, ext.domain, ext.suffix
+    except Exception as e:
+        print(f"Error extracting features from URL {url}: {e}")
+        return None, None, None
 
 def prefix_suffix(url):
-    subDomain, domain, suffix = extract(url)
-    if(domain.count('-')):
-        return 1
-    else:
-        return -1
-    # if '-' in urlparse(url).netloc:
-    #     return 1            # phishing
-    # else:
-    #     return 0            # legitimate
+    try:
+        subDomain, domain, suffix = extract(url)
+        if domain.count('-') > 2:
+            return 1
+        else:
+            return -1
+    except Exception as e:
+        print(f"Error processing prefix_suffix for URL {url}: {e}")
+        return 0  # Return 0 or handle the error as needed
 
-
-
-# Feature 7
 def sub_domain(url):
-    subDomain, domain, suffix = extract(url)
-    if(subDomain.count('.')==0):
-        return 1
-    elif(subDomain.count('.')==1):
-        return 0
-    else:
-        return -1
-
-
+    try:
+        subDomain, domain, suffix = extract(url)
+        print("I take long, I am checking for sub domain")
+        if subDomain.count('.') == 0:
+            return 1
+        elif subDomain.count('.') == 1:
+            return 0
+        else:
+            return -1
+    except Exception as e:
+        print(f"Error processing sub_domain for URL {url}: {e}")
+        return 0  # Return 0 or handle the error as needed
 
 # Feature 8
 def SSLfinal_State(url):
     try:
 #check wheather contains https
-        if(regex.search('^https',url)):
+        if(regex.search('https',url)):
             usehttps = 1
         else:
             usehttps = 0
@@ -190,7 +192,7 @@ def SSLfinal_State(url):
         startingYear = int(startingDate.split()[3])
         endingYear = int(endingDate.split()[3])
         Age_of_certificate = endingYear-startingYear
-
+        print("I take long, I am checking for SSL certificate")
 #checking final conditions
         if((usehttps==1) and (certificate_Auth in trusted_Auth) and (Age_of_certificate>=1) ):
             return 1 #legitimate
@@ -210,6 +212,7 @@ def domain_registration(url):
         updated = w.updated_date
         exp = w.expiration_date
         length = (exp[0]-updated[0]).days
+        print("I take long, I am checking for domain registration")
         if(length<=365):
             return -1
         else:
@@ -237,6 +240,7 @@ def port(url):
     
     # Check if a port is specified in the domain
     port_match = regex.search(r":(\d+)$", domain)
+    print("I take long, I am checking for port in URL")
     if port_match:
         port = port_match.group(1)
         return -1  # Port specified, suspicious
@@ -247,10 +251,11 @@ def port(url):
 
 def https_token(url):
     hostname = urlparse(url).hostname
+    print("I take long, I am checking for https token in URL")
     if hostname and 'https' in hostname:
-        return -1  # Phishy
-    else:
         return 1  # Legitimate
+    else:
+        return -1  # Phishy
 
 # Feature 13
 def request_url(url):
@@ -258,37 +263,42 @@ def request_url(url):
         subDomain, domain, suffix = extract(url)
         websiteDomain = domain
 
-        opener = urllib.request.urlopen(url).read()
+        # Set timeout for the request
+        opener = urllib.request.urlopen(url, timeout=10).read()
         soup = BeautifulSoup(opener, 'lxml')
         imgs = soup.findAll('img', src=True)
         total = len(imgs)
 
         linked_to_same = 0
-        avg =0
+        avg = 0
         for image in imgs:
             subDomain, domain, suffix = extract(image['src'])
             imageDomain = domain
-            if(websiteDomain==imageDomain or imageDomain==''):
-                linked_to_same = linked_to_same + 1
+            if websiteDomain == imageDomain or imageDomain == '':
+                linked_to_same += 1
+
         vids = soup.findAll('video', src=True)
-        total = total + len(vids)
+        total += len(vids)
 
         for video in vids:
             subDomain, domain, suffix = extract(video['src'])
             vidDomain = domain
-            if(websiteDomain==vidDomain or vidDomain==''):
-                linked_to_same = linked_to_same + 1
-        linked_outside = total-linked_to_same
-        if(total!=0):
-            avg = linked_outside/total
+            if websiteDomain == vidDomain or vidDomain == '':
+                linked_to_same += 1
 
-        if(avg<0.22):
+        linked_outside = total - linked_to_same
+        if total != 0:
+            avg = linked_outside / total
+
+        print("I take long, I am checking for request URL")
+        if avg < 0.22:
             return 1
-        elif(0.22<=avg<=0.61):
+        elif 0.22 <= avg <= 0.61:
             return 0
         else:
             return -1
-    except:
+    except Exception as e:
+        print(f"Error: {e}")
         return 0
 
 # Feature 14
@@ -297,7 +307,7 @@ def url_of_anchor(url):
         subDomain, domain, suffix = extract(url)
         websiteDomain = domain
 
-        opener = urllib.request.urlopen(url).read()
+        opener = urllib.request.urlopen(url, timeout=10).read()
         soup = BeautifulSoup(opener, 'lxml')
         anchors = soup.findAll('a', href=True)
         total = len(anchors)
@@ -311,7 +321,8 @@ def url_of_anchor(url):
         linked_outside = total-linked_to_same
         if(total!=0):
             avg = linked_outside/total
-
+            
+        print("I take long, I am checking for URL of anchor")
         if(avg<0.31):
             return 1
         elif(0.31<=avg<=0.67):
@@ -344,7 +355,7 @@ def Links_in_tags(url):
         tags = no_of_meta + no_of_link + no_of_script
         if(total!=0):
             avg = tags/total
-
+        print("I take long, I am checking for links in tags")
         if(avg<0.25):
             return 1
         elif(0.25<=avg<=0.81):
@@ -359,6 +370,7 @@ def Links_in_tags(url):
 def fetch_url(url):
     response = requests.get(url)
     response.raise_for_status() # Ensure we notice bad responses
+    print("I take long, I am fetching URL")
     return response.text
 
 def sfh(url):
@@ -370,6 +382,7 @@ def sfh(url):
         soup = BeautifulSoup(html, 'html.parser')
         form = soup.find('form')
         
+        print("I take long, I am checking for SFH")
         # Not phishy if no form is found in the HTML
         if not form:
             print("No form found in the HTML")
@@ -383,18 +396,31 @@ def sfh(url):
         # Join the action URL with the base URL if it's a relative URL
         full_url = urljoin(url, action)
         action_domain = urlparse(full_url).netloc
+        
         if action_domain:
-            url_domain = urlparse(url).netloc # Extract domain from the URL
-            # If the form data is submitted to the same domain, it's not phishy
-            if(url_domain == action_domain):
-                return -1
-            print(f"Form data is submitted to domain: {action_domain}")
-            x1 = url_having_ip(url) # -1 if IP address is present in URL, 1 otherwise
-            x2 = domain_registration(url) # -1 if domain is registered for more than a year, 1 otherwise
-            x3 = https_token(url) # -1 if https is not present in URL, 1 otherwise
-            x4 = SSLfinal_State(url) # -1 if certificate is valid and trusted, 1 otherwise
-            # Add more feature checks as needed
+            url_domain = urlparse(url).netloc  # Extract domain from the URL
             
+            # If the form data is submitted to the same domain, it's not phishy
+            if url_domain == action_domain:
+                return -1
+            
+            print(f"Form data is submitted to domain: {action_domain}")
+            
+            # Additional feature checks (assuming these functions are defined elsewhere)
+            x1 = url_having_ip(url)  # -1 if IP address is present in URL, 1 otherwise
+            x2 = domain_registration(url)  # -1 if domain is registered for more than a year, 1 otherwise
+            x3 = https_token(url)  # 1 if https is not present in URL, -1 otherwise
+            x4 = SSLfinal_State(url)  # -1 if certificate is valid and trusted, 1 otherwise
+            
+            # Calculate feature score based on your chosen logic
+            feature_score = x1 + x2 + x3 + x4
+            print("I take long, I am checking for SFH")
+            # Return score based on feature checks
+            if feature_score < 0:
+                return -1
+            else:
+                return 1
+    
     except requests.exceptions.ConnectTimeout as e:
         print("Connection timed out:", e)
         # Handle the timeout error gracefully (e.g., retry or skip the URL)
@@ -411,6 +437,7 @@ def email_submit(url):
     try:
         opener = urllib.request.urlopen(url).read()
         soup = BeautifulSoup(opener, 'lxml')
+        print("I take long, I am checking for email submit")
         if(soup.find('mailto:')):
             return -1
         else:
@@ -461,7 +488,7 @@ def redirect(url):
     try:
         # Send a GET request
         response = requests.get(url, allow_redirects=True)
-        
+        print("I take long, I am checking for redirection")
         # Check if the URL was redirected
         if response.history:
             print("Redirection history:")
@@ -497,6 +524,7 @@ If the response is empty or onmouseover is found then, the value assigned to thi
 def on_mouseover(url):
     try:
         response = requests.get(url)
+        print("I take long, I am checking for onmouseover")
         if response.status_code == 200:
             if response.text.strip() == "":
                 return 1  # Empty response, likely phishing
@@ -580,6 +608,7 @@ def age_of_domain(url):
         start_date = w.creation_date
         current_date = datetime.datetime.now()
         age =(current_date-start_date[0]).days
+        print("I take long, I am checking for age of domain")
         if(age>=180):
             return -1
         else:
@@ -616,6 +645,7 @@ def check_dns(domain):
         resolver.lifetime = 10  # Set lifetime to 10 seconds
         answers = resolver.resolve(domain, 'A')
         ip_address = answers[0].to_text()
+        print("I take long, I am checking for DNS record")
     except (dns.resolver.NoAnswer, dns.resolver.NXDOMAIN, dns.resolver.NoNameservers, dns.resolver.Timeout):
         print(f"Unable to resolve domain: {domain}")
         return -1
@@ -659,16 +689,17 @@ def web_traffic(url):
         rank = BeautifulSoup(urllib.request.urlopen("http://data.alexa.com/data?cli=10&dat=s&url=" + url).read(), "xml").find(
             "REACH")['RANK']
         rank = int(rank)
+        print("I take long, I am checking for web traffic")
         if rank < 100000:
             return 1
         else:
-            return 0
+            return -1
     except (urllib.error.URLError, urllib.error.HTTPError) as e:
         print(f"Unable to fetch web traffic for URL: {url}. Error: {e}")
-        return -1
+        return 1
     except Exception as e:
         print(f"An unexpected error occurred: {e}")
-        return -1
+        return 1
 
 # Feature 27
 def page_rank(url):
@@ -683,7 +714,7 @@ def page_rank(url):
         if response.status_code == 200:
             soup = BeautifulSoup(response.text, "html.parser")
             search_results = soup.find_all('div', class_='g')
-
+            print("I take long, I am checking for page rank")
             for i, result in enumerate(search_results):
                 link = result.find('a', href=True)
                 if link and url in link['href']:
@@ -713,6 +744,7 @@ def statistical(url):
     # Number of special characters
     special_characters = r'[@&%=?]'
     features['num_special_chars'] = len(regex.findall(special_characters, url))
+    print("I take long, I am checking for statistical")
     # Determine if URL is phishy, not phishy, or suspicious
     if (features['url_length'] > 54 or features['num_dots'] > 5 or
         features['num_hyphens'] > 3 or features['num_digits'] > 10 or
@@ -745,9 +777,16 @@ def popup(url):
 
 # Takes URL as input and returns the features as a list
 def extract_url_features(url):
-    # Converts the given URL into standard format
+    # Normalize the URL
     if not regex.match(r"^https?", url):
-        url = "http://" + url
+        if url.startswith("www."):
+            url = "https://" + url
+        elif url.startswith("http://"):
+            url = url.replace("http://", "https://")
+        elif url.startswith("https://"):
+            pass  # Already in the correct format
+        else:
+            url = "https://" + url  # Assume HTTPS for simplicity
 
 
     url_features = [url_having_ip(url),url_length(url),url_short(url),having_at_symbol(url),
@@ -761,69 +800,3 @@ def extract_url_features(url):
 
     print(url_features)
     return url_features
-
-
-    
-    
-    
-
-'''
-NEW FEATURES:
-'''
-
-# 14.End time of domain: The difference between termination time and current time (Domain_End)
-# If end period of domain > 6 months, the value of this feature is 1 (phishing) else 0 (legitimate). 
-
-# def domainEnd(domain_name):
-#   expiration_date = domain_name.expiration_date
-#   if isinstance(expiration_date,str):
-#     try:
-#       expiration_date = datetime.strptime(expiration_date,"%Y-%m-%d")
-#     except:
-#       return 1
-#   if (expiration_date is None):
-#       return 1
-#   elif (type(expiration_date) is list):
-#       return 1
-#   else:
-#     today = datetime.now()
-#     end = abs((expiration_date - today).days)
-#     if ((end/30) < 6):
-#       end = 0
-#     else:
-#       end = 1
-#   return end
-
-
-'''
-Computes the depth of the URL. This feature calculates the number of sub pages in the given url based on the '/'.
-
-The value of feature is a numerical based on the URL.
-'''
-
-# 5.Gives number of '/' in URL (URL_Depth)
-def getDepth(url):
-  s = urlparse(url).path.split('/')
-  depth = 0
-  for j in range(len(s)):
-    if len(s[j]) != 0:
-      depth = depth+1
-  return depth
-
-
-'''
-Website Forwarding
-
-The fine line that distinguishes phishing websites from legitimate ones is how many times a website has been redirected. In our dataset, we find that legitimate websites have been redirected one time max. On the other hand, phishing websites containing this feature have been redirected at least 4 times.
-
-'''
-
-# 18.Checks the number of forwardings (Web_Forwards)    
-def forwarding(response):
-  if response == "":
-    return 1
-  else:
-    if len(response.history) <= 2:
-      return 0
-    else:
-      return 1

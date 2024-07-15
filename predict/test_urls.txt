@@ -1,0 +1,38 @@
+LEGITIMATE
+
+1. https://youtube.com/
+2. https://youtube.com
+3. https://google.com/
+4. https://google.com
+5. www.google.com
+6. https://www.msrit.edu
+7. www.msrit.edu
+8. https://instagram.com/
+9. www.instagram.com
+10. https://wikipedia.com
+11. www.wikipedia.com
+12. https://indianrailways.com
+13. hubpages.com
+14. nguyentandung.org
+15. docs.google.com
+16. rebrand.ly
+
+
+PHISHY URLS:
+
+1. icloud.com.apple-findmyiphone.world
+2. webapp186332.ip-172-104-4-187.cloudezapp.io
+3. verificare.sella.corporateportal.aggiorniituoidati.com
+4. greatescapesworkshop.com
+5. dropbox.com
+6. livraisonspeed01.cloudaccess.host
+7. www.bankofamerrrrica.com
+8. locksmail.com
+9. www.banofamerrica.com
+10. secure-login-paypal.com
+11. facebook-login-security.com
+12. google-support-info.xyz
+13. login.microsoft.com.verify.account.userinfo.co
+14. freeviruscleaner.com
+15. http://192.168.1.1/online-banking/login
+
