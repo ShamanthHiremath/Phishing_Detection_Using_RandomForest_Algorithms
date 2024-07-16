@@ -71,7 +71,7 @@ We achieved an accuracy of **97.31%** in detecting phishing URLs using our Rando
 ### Python Script
 1. To run a Python script from your command prompt or terminal, use the following format:
     ```bash
-    python3 prediction.py
+    python3 main.py
 2. When prompted, enter the URL you want to check.
 
 The script will output whether the URL is classified as phishing or legitimate.
@@ -79,7 +79,7 @@ The script will output whether the URL is classified as phishing or legitimate.
 ### React Web Application
 1. Navigate to the React app directory:
     ```bash
-    cd react-app
+    cd frontend
 2. Install dependencies:
     ```bash
     npm install
@@ -98,7 +98,7 @@ RandomForest is a robust ensemble learning method that constructs multiple decis
 ### [Shamanth M Hiremath](https://github.com/ShamanthHiremath)
 Email: shamanth.hiremath.101@gmail.com
 ### [Sanchit Vijay](https://github.com/sanchiitvijay)
-Email: contributor2@gmail.com
+Email: sanchiitvijay@gmail.com
 
 ## License
 This project is licensed under the MIT License. See the LICENSE file for details.
