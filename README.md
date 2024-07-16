@@ -95,9 +95,9 @@ The script will output whether the URL is classified as phishing or legitimate.
 RandomForest is a robust ensemble learning method that constructs multiple decision trees during training and outputs the mode of the classes (for classification) or mean prediction (for regression) of the individual trees. It excels in handling large datasets with high dimensionality and provides insights into feature importance.
 
 ## Contributors
-##### [Shamanth M Hiremath](https://github.com/ShamanthHiremath)
+### [Shamanth M Hiremath](https://github.com/ShamanthHiremath)
 Email: shamanth.hiremath.101@gmail.com
-##### [Sanchit Vijay](https://github.com/sanchiitvijay)
+### [Sanchit Vijay](https://github.com/sanchiitvijay)
 Email: contributor2@gmail.com
 
 ## License
