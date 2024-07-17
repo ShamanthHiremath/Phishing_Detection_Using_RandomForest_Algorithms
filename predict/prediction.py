@@ -22,6 +22,9 @@ print("[url_having_ip(url),url_length(url),url_short(url),having_at_symbol(url),
 # Load the trained model
 classifier = joblib.load('trained_models/randomForest_final.pkl')
 
+# Probabilities of each class
+# probabilities = classifier.predict_proba(new_data)
+
 # Predict the class for the new data
 prediction = classifier.predict(new_data)
 
@@ -30,3 +33,5 @@ if prediction[0]==1:
     print("Phishy URL")
 else:
     print(f"Legitimate URL")
+    
+# print("Confidence Score: ",  probabilities.max(axis=1))
