@@ -99,6 +99,8 @@ RandomForest is a robust ensemble learning method that constructs multiple decis
 Email: shamanth.hiremath.101@gmail.com
 ### [Sanchit Vijay](https://github.com/sanchiitvijay)
 Email: sanchiitvijay@gmail.com
+### [Trijal Shinde](https://github.com/trijal18)
+Email: trijal18@gmail.com
 
 ## License
 This project is licensed under the MIT License. See the LICENSE file for details.
