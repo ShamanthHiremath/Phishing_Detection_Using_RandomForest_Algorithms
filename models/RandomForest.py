@@ -82,8 +82,8 @@ joblib.dump(classifier, 'trained_models/randomForest_final.pkl', protocol=4)
 '''
 RANDOM FOREST MODEL SPECS:
 
-Accuracy of the model: 97.23789746464618  %
-Best Accuracy = 0.9723789746464618
+Accuracy of the model: 97.31789746464618  %
+Best Accuracy = 0.9731789746464618
 Best parameters = {'criterion': 'entropy', 'max_features': 'log2', 'n_estimators': 100}
 
 Cross-validation score: 0.9693641373263504
