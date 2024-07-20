@@ -71,7 +71,7 @@ We achieved an accuracy of **97.31%** in detecting phishing URLs using our Rando
 ### Python Script
 1. To run a Python script from your command prompt or terminal, use the following format:
     ```bash
-    python3 main.py
+    python main.py/python3 main.py
 2. When prompted, enter the URL you want to check.
 
 The script will output whether the URL is classified as phishing or legitimate.
