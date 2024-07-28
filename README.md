@@ -1,7 +1,7 @@
 # Phishing URL Detection Using RandomForest 
 
 ## Overview
-This project aims to detect phishing URLs using a RandomForest classifier. The process involves two main steps: feature extraction from URLs and prediction using a pre-trained RandomForest model.
+This project aims to detect phishing URLs using a RandomForest classifier. The process involves two main steps: feature extraction from URLs and prediction using a custom trained RandomForest model.
 
 ### Feature Extraction
 
