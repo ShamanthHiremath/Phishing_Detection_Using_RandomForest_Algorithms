@@ -34,8 +34,8 @@ const App = () => {
 
 
   return (
-    <div>
-      <a href="https://www.github.com/" className='right-8 absolute' >
+    <div className='py-12 px-6'>
+      <a href="https://www.github.com/" className='right-5 top-5 z-10 absolute' >
           <FaGithub size={30} color={"white"}/>
           </a>
       {/* <div className="heading flex flex-col md:mt-12 mt-10 font-semibold text-center m-6 h-[70px] md:text-5xl text-3xl bg-gradient-to-r from-green-900 via-blue-400 to-indigo-400 text-transparent bg-clip-text">
@@ -53,7 +53,7 @@ const App = () => {
         </h1>
       </div>
 
-        <form id="fileForm" className='md:mt-12  mx-auto md:w-[50%] w-[90%]' onSubmit={handleSubmit}>
+        <form id="fileForm" className='mt-12   mx-auto md:w-[50%] w-full' onSubmit={handleSubmit}>
             <label className="input input-bordered rounded-xl max-md:text-sm flex items-center gap-3 pr-0 py-1">
               URL :  
             <input type="text"
